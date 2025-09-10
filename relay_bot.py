@@ -8,8 +8,8 @@ API_ID = 29028065          # ganti dengan API_ID dari my.telegram.org
 API_HASH = "048042efcb7d21612b1eb1a8adced921"  # ganti dengan API_HASH dari my.telegram.org
 SESSION_NAME = "buyer_session"
 
-MASTER_USERNAME = "MasterBot"   # username bot master, misal "myosintbot"
-TOKEN_TIRUAN = "TOKEN_TIRUAN"   # token bot tiruan dari BotFather
+MASTER_USERNAME = "TLonewolfbot"   # username bot master, misal "myosintbot"
+TOKEN_TIRUAN = "8214281586:AAHbihXLgZxaBW9ESFfXvYv8Yd7HtmipqRk"   # token bot tiruan dari BotFather
 # ============================
 
 tg_user = TelegramClient(SESSION_NAME, API_ID, API_HASH)
