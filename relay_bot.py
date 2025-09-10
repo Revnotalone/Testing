@@ -1,20 +1,22 @@
+import os
 import asyncio
 from telethon import TelegramClient, events
 from telegram import Update, Bot, BotCommand
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-# ========== CONFIG ==========
-API_ID = 29028065          # ganti dengan API_ID dari my.telegram.org
-API_HASH = "048042efcb7d21612b1eb1a8adced921"  # ganti dengan API_HASH dari my.telegram.org
-SESSION_NAME = "buyer_session"
+# ========== CONFIG dari Environment Variable ==========
+API_ID = int(os.getenv("API_ID", "0"))
+API_HASH = os.getenv("API_HASH")
+SESSION_NAME = os.getenv("SESSION_NAME", "buyer_session")
 
-MASTER_USERNAME = "TLonewolfbot"   # username bot master, misal "myosintbot"
-TOKEN_TIRUAN = "8214281586:AAHbihXLgZxaBW9ESFfXvYv8Yd7HtmipqRk"   # token bot tiruan dari BotFather
-# ============================
+MASTER_USERNAME = os.getenv("MASTER_USERNAME")   # username bot master (contoh: cekdata_bot)
+TOKEN_TIRUAN = os.getenv("TOKEN_TIRUAN")        # token bot tiruan dari BotFather
+# ======================================================
 
 tg_user = TelegramClient(SESSION_NAME, API_ID, API_HASH)
 bot_tiruan = Bot(TOKEN_TIRUAN)
 
+# Daftar command (sama persis dengan Bot Master)
 COMMANDS = [
     BotCommand("help", "Menampilkan informasi bantuan"),
     BotCommand("location", "Lokasi pelanggan berdasarkan MSISDN"),
@@ -23,9 +25,11 @@ COMMANDS = [
 ]
 
 async def set_commands():
+    """Set daftar command di Bot Tiruan"""
     await bot_tiruan.set_my_commands(COMMANDS)
 
 async def relay_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Relay command dari user ke master, lalu balasannya dikirim balik"""
     user_id = update.message.chat_id
     cmd = update.message.text
 
@@ -40,10 +44,15 @@ async def relay_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     app = Application.builder().token(TOKEN_TIRUAN).build()
+
+    # Register command handler
     for cmd in ["help", "location", "locimei", "quota"]:
         app.add_handler(CommandHandler(cmd, relay_command))
+
+    # Set daftar command di awal
     app.post_init = set_commands
-    print("🤖 Bot Tiruan aktif...")
+
+    print("🤖 Bot Tiruan berjalan...")
     app.run_polling()
 
 if __name__ == "__main__":
